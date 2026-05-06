@@ -1,9 +1,12 @@
 # Computación Paralela y Distribuida
 
-**Asignatura: Fundamentos de Computación Paralela y Distribuida**
-**Docente: Prf: Juan Alejandro Jaimes**
-**Fecha: 04/05/2026**
-**Repositorio: [computacion-paralela-distribuida](https://github.com/yeferson59/computacion-paralela-distribuida)**
+**Asignatura: Fundamentos de Computación Paralela y Distribuida**.
+
+**Docente: Prf: Juan Alejandro Jaimes**.
+
+**Fecha: 04/05/2026**.
+
+**Repositorio: [computacion-paralela-distribuida](https://github.com/yeferson59/computacion-paralela-distribuida)**.
 
 Aqui se encuentra el repositorio de la asignatura de Computación Paralela y Distribuida desde el segundo Corte del semestre 2026-1.
 
@@ -11,7 +14,7 @@ Aqui se encuentra el repositorio de la asignatura de Computación Paralela y Dis
 
 |     | Colaborador | GitHub                                       |
 | --- | ----------- | -------------------------------------------- |
-| 👩🏻‍💻  | Silvana     | [@inana20s](https://github.com/inana20)      |
+| 👩🏻‍💻  | Silvana     | [@inana20](https://github.com/inana20)       |
 | 👨🏻‍💻  | Yeferson    | [@yeferson59](https://github.com/yeferson59) |
 
 **Repositorio: [computacion-paralela-distribuida](https://github.com/yeferson59/computacion-paralela-distribuida)**.
