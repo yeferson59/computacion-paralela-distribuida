@@ -21,9 +21,9 @@ Aqui se encuentra el repositorio de la asignatura de Computación Paralela y Dis
 
 **Rama Principal: [main](https://github.com/yeferson59/computacion-paralela-distribuida/tree/main)**.
 
-| No Laboratorio | Nombre de Laboratorio    |
-| -------------- | ------------------------ |
-| 1              | lab_01_mpi_openmp_hybrid |
+| No Laboratorio | Nombre de Laboratorio    | Ubicación                                                                                                                                  |
+| -------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1              | lab_01_mpi_openmp_hybrid | [lab_01_mpi_openmp_hybrid](https://github.com/yeferson59/computacion-paralela-distribuida/tree/main/laboratorios/lab_01_mpi_openmp_hybrid) |
 
 ### Convención de commits
 
