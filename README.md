@@ -12,10 +12,10 @@ Aqui se encuentra el repositorio de la asignatura de Computación Paralela y Dis
 
 ## Equipo
 
-|     | Colaborador | GitHub                                       |
-| --- | ----------- | -------------------------------------------- |
-| 👩🏻‍💻  | Silvana     | [@inana20](https://github.com/inana20)       |
-| 👨🏻‍💻  | Yeferson    | [@yeferson59](https://github.com/yeferson59) |
+|     | Colaborador     | GitHub                                       |
+| --- | --------------- | -------------------------------------------- |
+| 👩🏻‍💻  | Silvana Duque   | [@inana20](https://github.com/inana20)       |
+| 👨🏻‍💻  | Yeferson Toloza | [@yeferson59](https://github.com/yeferson59) |
 
 **Repositorio: [computacion-paralela-distribuida](https://github.com/yeferson59/computacion-paralela-distribuida)**.
 
