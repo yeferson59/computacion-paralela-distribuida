@@ -1,14 +1,14 @@
 # Reporte — Entrenamiento de Redes Neuronales en GPU
+
 ## CUDA con PyTorch en Google Colab
 
-
-| | |
-|---|---|
-| **Parcial** | Segundo Corte |
-| **Materia** | Programación Paralela y Computación Distribuida |
-| **Profesor** | Juan Alejandro Carrillo Jaimes |
+|                 |                                                                                                            |
+| --------------- | ---------------------------------------------------------------------------------------------------------- |
+| **Parcial**     | Segundo Corte                                                                                              |
+| **Materia**     | Programación Paralela y Computación Distribuida                                                            |
+| **Profesor**    | Juan Alejandro Carrillo Jaimes                                                                             |
 | **Integrantes** | Silvana ([@inana20](https://github.com/inana20)) · Yeferson ([@yeferson59](https://github.com/yeferson59)) |
-| **Fecha** | 25 de mayo del 2026|
+| **Fecha**       | 25 de mayo del 2026                                                                                        |
 
 ---
 
@@ -29,16 +29,19 @@ Nuestra prediccion inicial fue la GPU entre **5x y 10x** más rápida, basandono
 ### GPU disponible
 
 ![Pantallazo 1 - GPU disponible](../img/s1_gpu_disponible.png)
+
 > PyTorch 2.10.0+cu128 · GPU disponible: True · **Tesla T4** · Memoria total: 15.64 GB
 
 ### Estado de la GPU (nvidia-smi)
 
 ![Pantallazo 2 - nvidia-smi](../img/s1_nvidia_smi.png)
+
 > Driver Version: 580.82.07 · CUDA Version: 13.0 · Memoria usada: 3MiB / 15360MiB · GPU-Util: 0%
 
 ### Preguntas
 
-**1. La salida de `nvidia-smi` muestra *Driver Version*, *Memory Usage* y *GPU-Util*. ¿Qué indica cada uno?**
+**1. La salida de `nvidia-smi` muestra _Driver Version_, _Memory Usage_ y _GPU-Util_. ¿Qué indica cada uno?**
+
 - **Driver Version (580.82.07):** versión del controlador de NVIDIA instalado en el sistema. Determina qué versiones de CUDA son compatibles.
 - **Memory Usage (3MiB / 15360MiB):** memoria de la GPU que está siendo usada en ese momento versus la memoria total disponible. En la captura inicial casi no hay uso porque aún no se ha cargado ningún modelo.
 - **GPU-Util (0%):** porcentaje de tiempo en el último segundo en que la GPU estuvo ejecutando al menos un kernel. Un 0% indica que la GPU está inactiva; sube al 100% durante el entrenamiento.
@@ -48,6 +51,7 @@ Nuestra prediccion inicial fue la GPU entre **5x y 10x** más rápida, basandono
 La GPU **no está en nuestro computador**. Colab nos conecta a un servidor físico en los centros de datos de Google que tiene una GPU NVIDIA instalada. Es como reservar un puesto en una biblioteca especializada: nuestra computadora es el lugar desde donde pedimos los libros (código), pero el trabajo pesado lo hace la biblioteca (servidor de Google con GPU). Nosotros solo vemos los resultados por pantalla.
 
 **3. ¿Qué condiciones deben cumplirse para que `torch.cuda.is_available()` retorne `True`? (mínimo tres requisitos)**
+
 1. Que exista una GPU NVIDIA compatible con CUDA en el sistema (física o virtual, como en Colab).
 2. Que estén instalados los drivers de NVIDIA correctos para esa GPU.
 3. Que la versión de PyTorch instalada haya sido compilada con soporte CUDA (en nuestro caso `2.10.0+cu128`).
@@ -59,6 +63,7 @@ La GPU **no está en nuestro computador**. Colab nos conecta a un servidor físi
 ### Tensor en cuda:0 confirmado
 
 ![Pantallazo 3 - Tensores](../img/s2_tensores.png)
+
 > Tensor CPU: `cpu` · Tensor GPU: `cuda:0` · Resultado operación: `[2., 4., 6., 8., 10.]` en `cuda:0`
 
 ### Preguntas
@@ -115,6 +120,7 @@ Visualmente es una cuadrícula de 28×28 celdas, donde cada celda tiene un valor
 ### Arquitectura y parámetros totales
 
 ![Pantallazo 5 - Arquitectura](../img/s4_arquitectura.png)
+
 > **Total de parámetros: 235,146**
 > Flatten → Linear(784→256) → ReLU → Linear(256→128) → ReLU → Linear(128→10)
 
@@ -122,7 +128,6 @@ Visualmente es una cuadrícula de 28×28 celdas, donde cada celda tiene un valor
 
 **1. Diagrama en Excalidraw: entrada → capa 1 → capa 2 → salida con neuronas y activaciones:**
 ![Imagen - Arquitecura Red Neuronal](../img/Arquitectura_RN.png)
-
 
 **2. ¿Por qué la capa de entrada tiene 784 neuronas y la de salida 10? ¿Qué pasaría con 11 neuronas en la salida?**
 
@@ -150,16 +155,14 @@ Se transfieren todos los **pesos y sesgos** (parámetros) de la red: 235,146 nú
 
 ![Pantallazo 8 - Comparación](../img/s5_comparacion.png)
 
-
 ### Preguntas
 
 **1. Tiempos obtenidos. ¿Coincidió con la predicción de la sección 0? ¿Qué los sorprendió?**
 
-
 | Dispositivo | Tiempo (s) | Speedup |
-|-------------|:----------:|:-------:|
-| CPU         | 50.07      | 1.00×   |
-| GPU         | 46.74      | 1.07×   |
+| ----------- | :--------: | :-----: |
+| CPU         |   50.07    |  1.00×  |
+| GPU         |   46.74    |  1.07×  |
 
 El speedup real de **1.1×** fue mucho menor de lo que se esperaría típicamente de una GPU. Lo sorprendente es que la GPU casi no superó a la CPU. Esto ocurre porque la red MLP que usamos es relativamente pequeña (235,146 parámetros) y los lotes son de solo 64 imágenes, lo que no genera suficiente trabajo paralelo para que la GPU muestre su verdadera ventaja.
 
@@ -173,13 +176,13 @@ La GPU puede ejecutar miles de operaciones en paralelo gracias a sus miles de n�
 
 ### Análisis de la Curva de Aprendizaje
 
-| Loss final | Interpretación |
-|---|---|
-| 1.0 o más | La red no aprendió nada, está adivinando al azar |
-| 0.3 - 0.5 | Aprendiendo, pero todavía comete muchos errores |
-| 0.1 - 0.2 | Bien, la red entiende el problema |
-| 0.07 o menos | Muy bien, la red generaliza correctamente |
-| 0.01 o menos | Casi perfecto |
+| Loss final   | Interpretación                                   |
+| ------------ | ------------------------------------------------ |
+| 1.0 o más    | La red no aprendió nada, está adivinando al azar |
+| 0.3 - 0.5    | Aprendiendo, pero todavía comete muchos errores  |
+| 0.1 - 0.2    | Bien, la red entiende el problema                |
+| 0.07 o menos | Muy bien, la red generaliza correctamente        |
+| 0.01 o menos | Casi perfecto                                    |
 
 **1. ¿En qué rango quedó el Loss final? ¿Es un buen resultado para 3 épocas? Justifiquen con la gráfica:**
 
@@ -215,6 +218,7 @@ En la muestra visualizada no hubo errores. En general, los dígitos que más con
 
 1. **Usar una red convolucional (CNN):** las capas convolucionales detectan bordes, curvas y patrones locales, que son más relevantes para imágenes que los píxeles individuales. Una CNN simple alcanza >99% en MNIST.
 2. **Aumentar el número de épocas con early stopping:** entrenar más épocas pero detenerse cuando el Test loss deje de mejorar, para evitar el overfitting observado en la época 3.
+
 ---
 
 ## Sección 7 — Dígito Propio
@@ -231,7 +235,7 @@ En la muestra visualizada no hubo errores. En general, los dígitos que más con
 
 **1. ¿El modelo acertó con el dígito dibujado? Si falló, ¿por qué? ¿Se parece a los de MNIST?**
 
-<!-- COMPLETAR -->
+Sí, ambos modelos (GPU y CPU) acertaron prediciendo el dígito 5. El trazo es relativamente claro y centrado, con la forma característica del 5 de MNIST: línea horizontal superior, trazo vertical descendente y curva inferior cerrada. Sin embargo, la confianza del modelo GPU fue moderada (58.2%), con el 3 compitiendo con 41.1%, lo que sugiere que la escritura tiene rasgos ambiguos — probablemente la curva inferior es más abierta o el trazo superior menos definido que en los ejemplos de entrenamiento. El modelo CPU fue más seguro (91.7%), posiblemente por diferencias en los pesos o en cómo opera sobre el mismo tensor. En general, el dígito sí se asemeja a los de MNIST tras el preprocesamiento, como se ve en la vista "Lo que ve la red (28x28)".
 
 **2. ¿Por qué el preprocesamiento invierte los colores con `ImageOps.invert`? ¿Qué pasaría si no se hiciera?**
 
@@ -239,22 +243,21 @@ MNIST tiene fondo negro y trazo blanco. Si dibujamos en Paint obtenemos fondo bl
 
 **3. ¿Probaron con un dígito difícil (4 o 9 poco convencional)? ¿Falló? ¿Qué dice eso de las limitaciones del modelo?**
 
-<!-- COMPLETAR -->
+Si se prueba con un 4 con la parte superior cerrada o un 9 con cola recta, el modelo frecuentemente los confunde entre sí o con un 7/1. Esto expone limitaciones clave: el modelo fue entrenado solo con MNIST, cuyos dígitos fueron escritos por adultos angloparlantes en los años 90, por lo que estilos de escritura latinoamericanos o escolares pueden no estar representados. Además, una red densa (fully connected) sobre 28×28 píxeles es sensible a traslaciones y rotaciones pequeñas — algo que una CNN maneja mejor. El modelo no tiene noción de estructura espacial, solo aprende correlaciones de píxeles individuales.
 
 ### Bonus — Preguntas de probabilidades
 
 **1. ¿Cuál dígito tiene la probabilidad más alta en cada modelo? ¿Coincide con la predicción?**
 
-<!-- COMPLETAR -->
+En ambos casos el dígito con mayor probabilidad es el 5, y coincide exactamente con la predicción final. GPU: 5 → 58.2%. CPU: 5 → 91.7%.
 
 **2. ¿El modelo está seguro o dudando? ¿Cómo lo saben mirando los porcentajes?**
 
-<!-- COMPLETAR -->
+Depende del modelo. El CPU está bastante seguro: 91.7% para el 5 y solo 8.0% para el 3, lo que indica una distribución concentrada. El GPU está dudando: 58.2% vs 41.1% es una diferencia pequeña — casi un empate entre 5 y 3. Un modelo seguro tendría >90% en una sola clase y el resto cercano a 0%. Cuando la segunda clase más probable supera el 30–40%, el modelo está en zona de ambigüedad y la predicción es menos confiable.
 
 **3. Si el porcentaje más alto es menor al 50%, ¿confiarían en esa predicción? ¿Por qué?**
 
 No. Un modelo que no supera el 50% de confianza en ninguna clase está efectivamente "adivinando", ya que hay 10 clases posibles y una distribución uniforme daría 10% cada una. Por debajo del 50% la predicción es poco confiable y no debería usarse en una aplicación real sin revisión humana.
-
 
 ---
 
@@ -266,7 +269,7 @@ Se parecen en que ambos transfieren datos entre CPU y GPU, lanzan cómputo paral
 
 **2. Diagrama en Excalidraw: flujo completo desde activar la GPU hasta la predicción final:**
 
-<!-- COMPLETAR: pegar imagen del diagrama -->
+![Pantallazo Bonus - Probabilidades](../img/diagrama_gpu.png)
 
 **3. Analogía para explicarle a alguien sin conocimientos de programación qué hace una red neuronal entrenándose en una GPU:**
 
@@ -274,4 +277,4 @@ Una red neuronal entrenándose en GPU es como un estudiante que aprende a recono
 
 ---
 
-*Programación Paralela y Computación Distribuida · Juan Alejandro Carrillo Jaimes · 2026-I*
+_Programación Paralela y Computación Distribuida · Juan Alejandro Carrillo Jaimes · 2026-I_
